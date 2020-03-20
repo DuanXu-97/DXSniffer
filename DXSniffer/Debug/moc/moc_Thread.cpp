@@ -20,7 +20,7 @@
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_captureThread_t {
     QByteArrayData data[9];
-    char stringdata0[91];
+    char stringdata0[89];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -32,17 +32,17 @@ static const qt_meta_stringdata_captureThread_t qt_meta_stringdata_captureThread
 QT_MOC_LITERAL(0, 0, 13), // "captureThread"
 QT_MOC_LITERAL(1, 14, 9), // "sendError"
 QT_MOC_LITERAL(2, 24, 0), // ""
-QT_MOC_LITERAL(3, 25, 5), // "param"
-QT_MOC_LITERAL(4, 31, 10), // "sendPacket"
-QT_MOC_LITERAL(5, 42, 18), // "const pcap_pkthdr*"
-QT_MOC_LITERAL(6, 61, 6), // "header"
-QT_MOC_LITERAL(7, 68, 13), // "const u_char*"
-QT_MOC_LITERAL(8, 82, 8) // "pkt_data"
+QT_MOC_LITERAL(3, 25, 3), // "msg"
+QT_MOC_LITERAL(4, 29, 10), // "sendPacket"
+QT_MOC_LITERAL(5, 40, 18), // "const pcap_pkthdr*"
+QT_MOC_LITERAL(6, 59, 6), // "header"
+QT_MOC_LITERAL(7, 66, 13), // "const u_char*"
+QT_MOC_LITERAL(8, 80, 8) // "pkt_data"
 
     },
-    "captureThread\0sendError\0\0param\0"
-    "sendPacket\0const pcap_pkthdr*\0header\0"
-    "const u_char*\0pkt_data"
+    "captureThread\0sendError\0\0msg\0sendPacket\0"
+    "const pcap_pkthdr*\0header\0const u_char*\0"
+    "pkt_data"
 };
 #undef QT_MOC_LITERAL
 
@@ -64,7 +64,7 @@ static const uint qt_meta_data_captureThread[] = {
        4,    2,   27,    2, 0x06 /* Public */,
 
  // signals: parameters
-    QMetaType::Void, QMetaType::Int,    3,
+    QMetaType::Void, QMetaType::QString,    3,
     QMetaType::Void, 0x80000000 | 5, 0x80000000 | 7,    6,    8,
 
        0        // eod
@@ -76,7 +76,7 @@ void captureThread::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
         captureThread *_t = static_cast<captureThread *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->sendError((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 0: _t->sendError((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 1: _t->sendPacket((*reinterpret_cast< const pcap_pkthdr*(*)>(_a[1])),(*reinterpret_cast< const u_char*(*)>(_a[2]))); break;
         default: ;
         }
@@ -84,7 +84,7 @@ void captureThread::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
         int *result = reinterpret_cast<int *>(_a[0]);
         void **func = reinterpret_cast<void **>(_a[1]);
         {
-            typedef void (captureThread::*_t)(int );
+            typedef void (captureThread::*_t)(QString );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&captureThread::sendError)) {
                 *result = 0;
                 return;
@@ -137,7 +137,7 @@ int captureThread::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void captureThread::sendError(int _t1)
+void captureThread::sendError(QString _t1)
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
@@ -150,8 +150,8 @@ void captureThread::sendPacket(const pcap_pkthdr * _t1, const u_char * _t2)
     QMetaObject::activate(this, &staticMetaObject, 1, _a);
 }
 struct qt_meta_stringdata_sendThread_t {
-    QByteArrayData data[6];
-    char stringdata0[40];
+    QByteArrayData data[5];
+    char stringdata0[34];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -163,13 +163,11 @@ static const qt_meta_stringdata_sendThread_t qt_meta_stringdata_sendThread = {
 QT_MOC_LITERAL(0, 0, 10), // "sendThread"
 QT_MOC_LITERAL(1, 11, 9), // "sendError"
 QT_MOC_LITERAL(2, 21, 0), // ""
-QT_MOC_LITERAL(3, 22, 5), // "param"
-QT_MOC_LITERAL(4, 28, 7), // "sendMsg"
-QT_MOC_LITERAL(5, 36, 3) // "msg"
+QT_MOC_LITERAL(3, 22, 3), // "msg"
+QT_MOC_LITERAL(4, 26, 7) // "sendMsg"
 
     },
-    "sendThread\0sendError\0\0param\0sendMsg\0"
-    "msg"
+    "sendThread\0sendError\0\0msg\0sendMsg"
 };
 #undef QT_MOC_LITERAL
 
@@ -191,8 +189,8 @@ static const uint qt_meta_data_sendThread[] = {
        4,    1,   27,    2, 0x06 /* Public */,
 
  // signals: parameters
-    QMetaType::Void, QMetaType::Int,    3,
-    QMetaType::Void, QMetaType::QString,    5,
+    QMetaType::Void, QMetaType::QString,    3,
+    QMetaType::Void, QMetaType::QString,    3,
 
        0        // eod
 };
@@ -203,7 +201,7 @@ void sendThread::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         sendThread *_t = static_cast<sendThread *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->sendError((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 0: _t->sendError((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 1: _t->sendMsg((*reinterpret_cast< QString(*)>(_a[1]))); break;
         default: ;
         }
@@ -211,7 +209,7 @@ void sendThread::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         int *result = reinterpret_cast<int *>(_a[0]);
         void **func = reinterpret_cast<void **>(_a[1]);
         {
-            typedef void (sendThread::*_t)(int );
+            typedef void (sendThread::*_t)(QString );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&sendThread::sendError)) {
                 *result = 0;
                 return;
@@ -264,7 +262,7 @@ int sendThread::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void sendThread::sendError(int _t1)
+void sendThread::sendError(QString _t1)
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);

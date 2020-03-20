@@ -102,8 +102,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
 	ui.setupUi(this);
 	QObject::connect(ui.tableWidget, SIGNAL(itemDoubleClicked(QTableWidgetItem *)), this, SLOT(clickPacketDetail(QTableWidgetItem *)));
-	QObject::connect(this, SIGNAL(deviceNumber(int)), this, SLOT(startCapture(int)));
+	QObject::connect(this, SIGNAL(captureSetting(int, const char *)), this, SLOT(startCapture(int, const char *)));
 	QObject::connect(&cThread, SIGNAL(sendPacket(const struct pcap_pkthdr *, const u_char *)), this, SLOT(receivePacket(const struct pcap_pkthdr *, const u_char *)));
+	QObject::connect(&cThread, SIGNAL(sendError(QString)), this, SLOT(errorMessage(QString)));
 	QObject::connect(ui.SendPacketBtn_ARP, SIGNAL(clicked()), this, SLOT(clickSendARP()));
 	QObject::connect(ui.SendPacketBtn_TCP, SIGNAL(clicked()), this, SLOT(clickSendTCP()));
 	QObject::connect(&sThread, SIGNAL(sendMsg(QString)), this, SLOT(receiveMsg(QString)));
@@ -123,13 +124,13 @@ MainWindow::MainWindow(QWidget *parent)
 
 	//打印设备列表
 	this->printDeviceList();
+
 	ui.ARPTypeRB_Rq->setChecked(true);
 }
 
 MainWindow::~MainWindow() {
 	fclose(fp);
 }
-
 
 
 int MainWindow::printDeviceList() {
@@ -166,21 +167,20 @@ int MainWindow::printDeviceList() {
 	pDevice[0]->setChecked(true);
 	pDevice2[0]->setChecked(true);
 
-	connect(ui.submitDevice, SIGNAL(clicked()), this, SLOT(clickSubmitDevice()));
-
+	connect(ui.submitBtn, SIGNAL(clicked()), this, SLOT(clickSubmit()));
 
 	return 0;
 }
 
-void MainWindow::clickSubmitDevice() {
+void MainWindow::clickSubmit() {
 	int i = 1;
 	QList<QAbstractButton*> list = pDeviceButtonGroup->buttons();
 	foreach(QAbstractButton *pButton, list)
 	{
 		if (pButton->isChecked()) {
-			emit(deviceNumber(i));
-			ui.submitDevice->setDisabled(true);
-			QMessageBox::information(NULL, "提示", QObject::tr("设备选择成功，开始捕获"));
+			emit(captureSetting(i, ui.lineEdit_filter->text().toStdString().c_str()));
+			ui.submitBtn->setDisabled(true);
+			QMessageBox::information(NULL, "提示", QObject::tr("设置成功，开始捕获"));
 			return;
 		}
 		i++;
@@ -429,8 +429,9 @@ void MainWindow::clickSendTCP() {
 	sThread.start();
 }
 
-void MainWindow::startCapture(int dn) {
+void MainWindow::startCapture(int dn, const char *ft) {
 	cThread.setDevice(dn, alldevs);
+	cThread.setFilter(ft);
 	cThread.start();
 }
 
@@ -612,22 +613,8 @@ void MainWindow::clickPacketDetail(QTableWidgetItem *pktItem) {
 
 
 
-void MainWindow::errorMessage(int param) {
-	switch (param) {
-	case 1:
-		QMessageBox::warning(NULL, "抱歉", QObject::tr("无法打开适配器，WinPcap暂不支持"));
-		break;
-	case 2:
-		QMessageBox::warning(NULL, "抱歉", QObject::tr("抱歉，这个程序只支持以太网"));
-		break;
-	case 3:
-		QMessageBox::warning(NULL, "抱歉", QObject::tr("抱歉，无法编译过滤器，请检查语法"));
-		break;
-	case 4:
-		QMessageBox::warning(NULL, "抱歉", QObject::tr("抱歉，设置过滤器失败"));
-		break;
-	}
-
+void MainWindow::errorMessage(QString msg) {
+	QMessageBox::warning(NULL, "抱歉", msg);
 }
 
 void MainWindow::receiveMsg(QString msg) {

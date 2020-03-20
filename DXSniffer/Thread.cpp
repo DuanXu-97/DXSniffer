@@ -10,8 +10,6 @@ int i = 0;
 pcap_t *adhandle;
 char errbuf[PCAP_ERRBUF_SIZE];
 u_int netmask;
-char packet_filter[] = "arp or (ip and tcp)";
-//char packet_filter[] = "ip and tcp";
 struct bpf_program fcode;
 
 //捕获数据包线程
@@ -22,7 +20,6 @@ captureThread::captureThread()
 
 void captureThread::run()
 {
-
 	//跳转到已选设备
 	for (d = this->alldevs, i = 0; i < this->deviceNumber - 1; d = d->next, i++);
 
@@ -33,14 +30,14 @@ void captureThread::run()
 		1000,
 		NULL,
 		errbuf)) == NULL) {
-		emit(sendError(1));
+		emit(sendError(QString("无法打开适配器，WinPcap暂不支持")));
 		exit(-1);
 		pcap_freealldevs(alldevs);
 	}
 
 	//检查数据链路层，只考虑以太网
 	if (pcap_datalink(adhandle) != DLT_EN10MB) {
-		emit(sendError(2));
+		emit(sendError(QString("抱歉，本程序只支持以太网")));
 		pcap_freealldevs(alldevs);
 		exit(-1);
 	}
@@ -56,15 +53,15 @@ void captureThread::run()
 	}
 
 	//编译过滤器
-	if (pcap_compile(adhandle, &fcode, packet_filter, 1, netmask) < 0) {
-		emit(sendError(3));
+	if (pcap_compile(adhandle, &fcode, this->packet_filter, 1, netmask) < 0) {
+		emit(sendError(QString("抱歉，无法编译过滤器，请检查语法")));
 		pcap_freealldevs(alldevs);
 		exit(-1);
 	}
 
 	//设置过滤器
 	if (pcap_setfilter(adhandle, &fcode) < 0) {
-		emit(sendError(4));
+		emit(sendError(QString("抱歉，设置过滤器失败")));
 		pcap_freealldevs(alldevs);
 		exit(-1);
 	}
@@ -78,6 +75,12 @@ void captureThread::setDevice(int dn, pcap_if_t *alldevs)
 {
 	this->deviceNumber = dn;
 	this->alldevs = alldevs;
+}
+
+// 设置过滤器，例如"arp or (ip and tcp)"
+void captureThread::setFilter(const char* filter)
+{
+	strcpy(this->packet_filter, filter);
 }
 
 
@@ -106,7 +109,7 @@ void sendThread::run()
 		1000,
 		NULL,
 		errbuf)) == NULL) {
-		emit(sendError(1));
+		emit(sendError(QString("无法打开适配器，WinPcap暂不支持")));
 		exit(-1);
 		pcap_freealldevs(alldevs);
 	}

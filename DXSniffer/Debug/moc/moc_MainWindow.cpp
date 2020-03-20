@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[20];
-    char stringdata0[226];
+    QByteArrayData data[22];
+    char stringdata0[238];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -30,34 +30,36 @@ struct qt_meta_stringdata_MainWindow_t {
 static const qt_meta_stringdata_MainWindow_t qt_meta_stringdata_MainWindow = {
     {
 QT_MOC_LITERAL(0, 0, 10), // "MainWindow"
-QT_MOC_LITERAL(1, 11, 12), // "deviceNumber"
-QT_MOC_LITERAL(2, 24, 0), // ""
-QT_MOC_LITERAL(3, 25, 2), // "dn"
-QT_MOC_LITERAL(4, 28, 17), // "clickSubmitDevice"
-QT_MOC_LITERAL(5, 46, 17), // "clickPacketDetail"
-QT_MOC_LITERAL(6, 64, 17), // "QTableWidgetItem*"
-QT_MOC_LITERAL(7, 82, 7), // "pktItem"
-QT_MOC_LITERAL(8, 90, 12), // "startCapture"
-QT_MOC_LITERAL(9, 103, 12), // "errorMessage"
-QT_MOC_LITERAL(10, 116, 5), // "param"
-QT_MOC_LITERAL(11, 122, 13), // "receivePacket"
-QT_MOC_LITERAL(12, 136, 18), // "const pcap_pkthdr*"
-QT_MOC_LITERAL(13, 155, 6), // "header"
-QT_MOC_LITERAL(14, 162, 13), // "const u_char*"
-QT_MOC_LITERAL(15, 176, 8), // "pkt_data"
-QT_MOC_LITERAL(16, 185, 12), // "clickSendARP"
-QT_MOC_LITERAL(17, 198, 12), // "clickSendTCP"
-QT_MOC_LITERAL(18, 211, 10), // "receiveMsg"
-QT_MOC_LITERAL(19, 222, 3) // "msg"
+QT_MOC_LITERAL(1, 11, 14), // "captureSetting"
+QT_MOC_LITERAL(2, 26, 0), // ""
+QT_MOC_LITERAL(3, 27, 2), // "dn"
+QT_MOC_LITERAL(4, 30, 11), // "const char*"
+QT_MOC_LITERAL(5, 42, 2), // "ft"
+QT_MOC_LITERAL(6, 45, 11), // "clickSubmit"
+QT_MOC_LITERAL(7, 57, 17), // "clickPacketDetail"
+QT_MOC_LITERAL(8, 75, 17), // "QTableWidgetItem*"
+QT_MOC_LITERAL(9, 93, 7), // "pktItem"
+QT_MOC_LITERAL(10, 101, 12), // "startCapture"
+QT_MOC_LITERAL(11, 114, 6), // "filter"
+QT_MOC_LITERAL(12, 121, 13), // "receivePacket"
+QT_MOC_LITERAL(13, 135, 18), // "const pcap_pkthdr*"
+QT_MOC_LITERAL(14, 154, 6), // "header"
+QT_MOC_LITERAL(15, 161, 13), // "const u_char*"
+QT_MOC_LITERAL(16, 175, 8), // "pkt_data"
+QT_MOC_LITERAL(17, 184, 12), // "clickSendARP"
+QT_MOC_LITERAL(18, 197, 12), // "clickSendTCP"
+QT_MOC_LITERAL(19, 210, 12), // "errorMessage"
+QT_MOC_LITERAL(20, 223, 3), // "msg"
+QT_MOC_LITERAL(21, 227, 10) // "receiveMsg"
 
     },
-    "MainWindow\0deviceNumber\0\0dn\0"
-    "clickSubmitDevice\0clickPacketDetail\0"
+    "MainWindow\0captureSetting\0\0dn\0const char*\0"
+    "ft\0clickSubmit\0clickPacketDetail\0"
     "QTableWidgetItem*\0pktItem\0startCapture\0"
-    "errorMessage\0param\0receivePacket\0"
-    "const pcap_pkthdr*\0header\0const u_char*\0"
-    "pkt_data\0clickSendARP\0clickSendTCP\0"
-    "receiveMsg\0msg"
+    "filter\0receivePacket\0const pcap_pkthdr*\0"
+    "header\0const u_char*\0pkt_data\0"
+    "clickSendARP\0clickSendTCP\0errorMessage\0"
+    "msg\0receiveMsg"
 };
 #undef QT_MOC_LITERAL
 
@@ -75,30 +77,30 @@ static const uint qt_meta_data_MainWindow[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,   59,    2, 0x06 /* Public */,
+       1,    2,   59,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       4,    0,   62,    2, 0x0a /* Public */,
-       5,    1,   63,    2, 0x0a /* Public */,
-       8,    1,   66,    2, 0x0a /* Public */,
-       9,    1,   69,    2, 0x0a /* Public */,
-      11,    2,   72,    2, 0x0a /* Public */,
-      16,    0,   77,    2, 0x0a /* Public */,
+       6,    0,   64,    2, 0x0a /* Public */,
+       7,    1,   65,    2, 0x0a /* Public */,
+      10,    2,   68,    2, 0x0a /* Public */,
+      12,    2,   73,    2, 0x0a /* Public */,
       17,    0,   78,    2, 0x0a /* Public */,
-      18,    1,   79,    2, 0x0a /* Public */,
+      18,    0,   79,    2, 0x0a /* Public */,
+      19,    1,   80,    2, 0x0a /* Public */,
+      21,    1,   83,    2, 0x0a /* Public */,
 
  // signals: parameters
-    QMetaType::Void, QMetaType::Int,    3,
+    QMetaType::Void, QMetaType::Int, 0x80000000 | 4,    3,    5,
 
  // slots: parameters
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 6,    7,
-    QMetaType::Void, QMetaType::Int,    3,
-    QMetaType::Void, QMetaType::Int,   10,
-    QMetaType::Void, 0x80000000 | 12, 0x80000000 | 14,   13,   15,
+    QMetaType::Void, 0x80000000 | 8,    9,
+    QMetaType::Void, QMetaType::Int, 0x80000000 | 4,    3,   11,
+    QMetaType::Void, 0x80000000 | 13, 0x80000000 | 15,   14,   16,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QString,   19,
+    QMetaType::Void, QMetaType::QString,   20,
+    QMetaType::Void, QMetaType::QString,   20,
 
        0        // eod
 };
@@ -109,14 +111,14 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         MainWindow *_t = static_cast<MainWindow *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->deviceNumber((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 1: _t->clickSubmitDevice(); break;
+        case 0: _t->captureSetting((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< const char*(*)>(_a[2]))); break;
+        case 1: _t->clickSubmit(); break;
         case 2: _t->clickPacketDetail((*reinterpret_cast< QTableWidgetItem*(*)>(_a[1]))); break;
-        case 3: _t->startCapture((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 4: _t->errorMessage((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 5: _t->receivePacket((*reinterpret_cast< const pcap_pkthdr*(*)>(_a[1])),(*reinterpret_cast< const u_char*(*)>(_a[2]))); break;
-        case 6: _t->clickSendARP(); break;
-        case 7: _t->clickSendTCP(); break;
+        case 3: _t->startCapture((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< const char*(*)>(_a[2]))); break;
+        case 4: _t->receivePacket((*reinterpret_cast< const pcap_pkthdr*(*)>(_a[1])),(*reinterpret_cast< const u_char*(*)>(_a[2]))); break;
+        case 5: _t->clickSendARP(); break;
+        case 6: _t->clickSendTCP(); break;
+        case 7: _t->errorMessage((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 8: _t->receiveMsg((*reinterpret_cast< QString(*)>(_a[1]))); break;
         default: ;
         }
@@ -124,8 +126,8 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         int *result = reinterpret_cast<int *>(_a[0]);
         void **func = reinterpret_cast<void **>(_a[1]);
         {
-            typedef void (MainWindow::*_t)(int );
-            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&MainWindow::deviceNumber)) {
+            typedef void (MainWindow::*_t)(int , const char * );
+            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&MainWindow::captureSetting)) {
                 *result = 0;
                 return;
             }
@@ -170,9 +172,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void MainWindow::deviceNumber(int _t1)
+void MainWindow::captureSetting(int _t1, const char * _t2)
 {
-    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 QT_END_MOC_NAMESPACE

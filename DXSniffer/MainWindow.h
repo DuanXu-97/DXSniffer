@@ -46,19 +46,18 @@ public:
 	~MainWindow();
 	int printDeviceList();
 
-
 	public slots :
-	void clickSubmitDevice();
+	void clickSubmit();
 	void clickPacketDetail(QTableWidgetItem *pktItem);
-	void startCapture(int dn);
-	void errorMessage(int param);
+	void startCapture(int dn, const char *filter);
 	void receivePacket(const struct pcap_pkthdr *header, const u_char *pkt_data);
 	void clickSendARP();
 	void clickSendTCP();
+	void errorMessage(QString msg);
 	void receiveMsg(QString msg);
 
 signals: //пе╨е
-	void deviceNumber(int dn);
+	void captureSetting(int dn, const char *ft);
 
 private:
 	Ui::MainWindowClass ui;
