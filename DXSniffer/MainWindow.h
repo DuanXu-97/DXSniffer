@@ -48,6 +48,7 @@ public:
 
 	public slots :
 	void clickSubmit();
+	void clickReset();
 	void clickPacketDetail(QTableWidgetItem *pktItem);
 	void startCapture(int dn, const char *filter);
 	void receivePacket(const struct pcap_pkthdr *header, const u_char *pkt_data);

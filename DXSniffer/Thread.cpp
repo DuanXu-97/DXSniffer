@@ -71,6 +71,14 @@ void captureThread::run()
 	pcap_loop(adhandle, 0, packet_handler, (u_char*)this);
 }
 
+void captureThread::stop()
+{
+	stopped = true;
+	pcap_breakloop(adhandle);
+	pcap_close(adhandle);
+	this->quit();
+}
+
 void captureThread::setDevice(int dn, pcap_if_t *alldevs)
 {
 	this->deviceNumber = dn;

@@ -105,6 +105,7 @@ MainWindow::MainWindow(QWidget *parent)
 	QObject::connect(this, SIGNAL(captureSetting(int, const char *)), this, SLOT(startCapture(int, const char *)));
 	QObject::connect(&cThread, SIGNAL(sendPacket(const struct pcap_pkthdr *, const u_char *)), this, SLOT(receivePacket(const struct pcap_pkthdr *, const u_char *)));
 	QObject::connect(&cThread, SIGNAL(sendError(QString)), this, SLOT(errorMessage(QString)));
+	QObject::connect(ui.resetBtn, SIGNAL(clicked()), this, SLOT(clickReset()));
 	QObject::connect(ui.SendPacketBtn_ARP, SIGNAL(clicked()), this, SLOT(clickSendARP()));
 	QObject::connect(ui.SendPacketBtn_TCP, SIGNAL(clicked()), this, SLOT(clickSendTCP()));
 	QObject::connect(&sThread, SIGNAL(sendMsg(QString)), this, SLOT(receiveMsg(QString)));
@@ -185,6 +186,15 @@ void MainWindow::clickSubmit() {
 		}
 		i++;
 	}
+}
+
+void MainWindow::clickReset() {
+	QMessageBox::information(NULL, "提示", QObject::tr("成功重置"));
+	cThread.stop();
+	ui.submitBtn->setDisabled(false);
+	ui.tableWidget->clear(); 
+	ui.tableWidget->setRowCount(0);
+	ui.tableWidget->setColumnCount(0);
 }
 
 void MainWindow::clickSendARP() {
