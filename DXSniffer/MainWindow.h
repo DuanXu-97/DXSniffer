@@ -113,6 +113,37 @@ typedef struct tcp_header {
 
 Q_DECLARE_METATYPE(tcp_header)
 
+typedef struct udp_header
+{
+	u_short sport;			//源端口号
+	u_short dport;			//目的端口号
+	u_short len;			//报文长度
+	u_short crc;			//16位检验和
+}udp_header;
+
+Q_DECLARE_METATYPE(udp_header)
+
+typedef struct icmp_header
+{
+	u_char type;			//类型
+	u_char code;			//代码
+	u_short crc;			//16位检验和
+	u_short idt;			//标识符
+	u_short seq;			//序列号
+}icmp_header;
+
+Q_DECLARE_METATYPE(icmp_header)
+
+typedef struct igmp_header
+{
+	u_char type;			//类型
+	u_char mrt;				//最大响应时间
+	u_short crc;			//校验和
+	ip_address groupaddr;	//组播地址
+} igmp_header;
+
+Q_DECLARE_METATYPE(igmp_header)
+
 typedef struct arp_header
 {
 	u_short hdtyp;			//硬件类型

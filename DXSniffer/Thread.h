@@ -32,6 +32,7 @@ public:
 		   void sendPacket(const struct pcap_pkthdr *header, const u_char *pkt_data);
 
 private:
+	pcap_t *adhandle;
 	volatile bool stopped;
 	int deviceNumber;
 	pcap_if_t *alldevs;

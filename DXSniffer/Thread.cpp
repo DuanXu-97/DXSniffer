@@ -24,19 +24,19 @@ void captureThread::run()
 	for (d = this->alldevs, i = 0; i < this->deviceNumber - 1; d = d->next, i++);
 
 	//打开适配器
-	if ((adhandle = pcap_open(d->name,
+	if ((this->adhandle = pcap_open(d->name,
 		65536,
 		PCAP_OPENFLAG_PROMISCUOUS,
 		1000,
 		NULL,
 		errbuf)) == NULL) {
 		emit(sendError(QString("无法打开适配器，WinPcap暂不支持")));
-		exit(-1);
 		pcap_freealldevs(alldevs);
+		exit(-1);
 	}
 
 	//检查数据链路层，只考虑以太网
-	if (pcap_datalink(adhandle) != DLT_EN10MB) {
+	if (pcap_datalink(this->adhandle) != DLT_EN10MB) {
 		emit(sendError(QString("抱歉，本程序只支持以太网")));
 		pcap_freealldevs(alldevs);
 		exit(-1);
@@ -53,29 +53,27 @@ void captureThread::run()
 	}
 
 	//编译过滤器
-	if (pcap_compile(adhandle, &fcode, this->packet_filter, 1, netmask) < 0) {
+	if (pcap_compile(this->adhandle, &fcode, this->packet_filter, 1, netmask) < 0) {
 		emit(sendError(QString("抱歉，无法编译过滤器，请检查语法")));
 		pcap_freealldevs(alldevs);
 		exit(-1);
 	}
 
 	//设置过滤器
-	if (pcap_setfilter(adhandle, &fcode) < 0) {
+	if (pcap_setfilter(this->adhandle, &fcode) < 0) {
 		emit(sendError(QString("抱歉，设置过滤器失败")));
 		pcap_freealldevs(alldevs);
 		exit(-1);
 	}
 
-	pcap_freealldevs(alldevs);
-
-	pcap_loop(adhandle, 0, packet_handler, (u_char*)this);
+	pcap_loop(this->adhandle, 0, packet_handler, (u_char*)this);
 }
 
 void captureThread::stop()
 {
+	pcap_breakloop(this->adhandle);
+	pcap_close(this->adhandle);
 	stopped = true;
-	pcap_breakloop(adhandle);
-	pcap_close(adhandle);
 	this->quit();
 }
 

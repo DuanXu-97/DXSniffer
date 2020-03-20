@@ -543,45 +543,135 @@ void MainWindow::clickPacketDetail(QTableWidgetItem *pktItem) {
 	case 2048:
 	{
 		QVariant variant_ih = pktItem->data(Qt::UserRole + 3);
-		QVariant variant_th = pktItem->data(Qt::UserRole + 4);
 		ip_header ih = variant_ih.value<ip_header>();
-		tcp_header th = variant_th.value<tcp_header>();
 
-		QGroupBox *tcp_box = new QGroupBox();
-		QVBoxLayout *pVLayout_tcpgb = new QVBoxLayout(tcp_box);
+		switch (ih.proto) {
+		case 1:
+		{
+			QVariant variant_icmph = pktItem->data(Qt::UserRole + 6);
+			icmp_header icmph = variant_icmph.value<icmp_header>();
 
-		QListWidget *plw_tcpDetail = new QListWidget(tcp_box);
+			QGroupBox *icmp_box = new QGroupBox();
+			QVBoxLayout *pVLayout_icmpgb = new QVBoxLayout(icmp_box);
+			QListWidget *plw_icmpDetail = new QListWidget(icmp_box);
+			icmp_box->setTitle("ICMP");
+			pVLayout_Dialog->addWidget(icmp_box);
+			pVLayout_icmpgb->addWidget(plw_icmpDetail);
 
-		tcp_box->setTitle("TCP");
+			QListWidgetItem *pType = new QListWidgetItem(plw_icmpDetail);
+			QListWidgetItem *pCode = new QListWidgetItem(plw_icmpDetail);
+			QListWidgetItem *pCrc = new QListWidgetItem(plw_icmpDetail);
+			QListWidgetItem *pIdt = new QListWidgetItem(plw_icmpDetail);
+			QListWidgetItem *pSeq = new QListWidgetItem(plw_icmpDetail);
 
-		pVLayout_Dialog->addWidget(tcp_box);
+			pType->setText(str.sprintf("类型：%d", icmph.type));
+			pCode->setText(str.sprintf("代码：%d", ntohs(icmph.code)));
+			pCrc->setText(str.sprintf("校验和：0x%04x", ntohs(icmph.crc)));
+			pIdt->setText(str.sprintf("标识符：%d", ntohs(icmph.idt)));
+			pSeq->setText(str.sprintf("序列号：%d", ntohs(icmph.seq)));
 
-		pVLayout_tcpgb->addWidget(plw_tcpDetail);
+			setLayout(pVLayout_icmpgb);
 
-		QListWidgetItem *pSport = new QListWidgetItem(plw_tcpDetail);
-		QListWidgetItem *pDport = new QListWidgetItem(plw_tcpDetail);
-		QListWidgetItem *pSequence = new QListWidgetItem(plw_tcpDetail);
-		QListWidgetItem *pAcknumber = new QListWidgetItem(plw_tcpDetail);
-		QListWidgetItem *pHlen = new QListWidgetItem(plw_tcpDetail);
-		QListWidgetItem *pFlags = new QListWidgetItem(plw_tcpDetail);
-		QListWidgetItem *pWindow = new QListWidgetItem(plw_tcpDetail);
-		QListWidgetItem *pCrc = new QListWidgetItem(plw_tcpDetail);
-		QListWidgetItem *pUrgptr = new QListWidgetItem(plw_tcpDetail);
-		QListWidgetItem *pOp = new QListWidgetItem(plw_tcpDetail);
+			break;
+		}
+		case 2:
+		{
+			QVariant variant_igmph = pktItem->data(Qt::UserRole + 7);
+			igmp_header igmph = variant_igmph.value<igmp_header>();
 
+			QGroupBox *igmp_box = new QGroupBox();
+			QVBoxLayout *pVLayout_igmpgb = new QVBoxLayout(igmp_box);
+			QListWidget *plw_igmpDetail = new QListWidget(igmp_box);
+			igmp_box->setTitle("IGMP");
+			pVLayout_Dialog->addWidget(igmp_box);
+			pVLayout_igmpgb->addWidget(plw_igmpDetail);
 
-		pSport->setText(str.sprintf("源端口号：%d", ntohs(th.sport)));
-		pDport->setText(str.sprintf("目的端口号：%d", ntohs(th.dport)));
-		pSequence->setText(str.sprintf("序号：%u", ntohl(th.sequence)));
-		pAcknumber->setText(str.sprintf("确认序号：%u", ntohl(th.acknumber)));
-		pHlen->setText(str.sprintf("头部长度：%x bytes", th.hlen * 4 / 10));
-		pFlags->setText(str.sprintf("标志位：0x%03x", th.flags));
-		pWindow->setText(str.sprintf("窗口大小：%d", ntohs(th.window)));
-		pCrc->setText(str.sprintf("校验和：0x%04x", ntohs(th.crc)));
-		pUrgptr->setText(str.sprintf("紧急指针：%x", th.urgptr));
-		pOp->setText(str.sprintf("选项：0x%x", th.op));
+			QListWidgetItem *pType = new QListWidgetItem(plw_igmpDetail);
+			QListWidgetItem *pMrt = new QListWidgetItem(plw_igmpDetail);
+			QListWidgetItem *pCrc = new QListWidgetItem(plw_igmpDetail);
+			QListWidgetItem *pGroupaddr = new QListWidgetItem(plw_igmpDetail);
 
-		setLayout(pVLayout_tcpgb);
+			pType->setText(str.sprintf("类型：0x%02x", igmph.type));
+			pMrt->setText(str.sprintf("最大响应时间：0x%02x", igmph.mrt));
+			pCrc->setText(str.sprintf("校验和：0x%04x", ntohs(igmph.crc)));
+			pGroupaddr->setText(str.sprintf("组播地址：%d.%d.%d.%d",
+				igmph.groupaddr.byte1,
+				igmph.groupaddr.byte2,
+				igmph.groupaddr.byte3,
+				igmph.groupaddr.byte4
+				));
+
+			setLayout(pVLayout_igmpgb);
+
+			break;
+		}
+		case 6:
+		{
+			QVariant variant_th = pktItem->data(Qt::UserRole + 4);
+			tcp_header th = variant_th.value<tcp_header>();
+
+			QGroupBox *tcp_box = new QGroupBox();
+			QVBoxLayout *pVLayout_tcpgb = new QVBoxLayout(tcp_box);
+			QListWidget *plw_tcpDetail = new QListWidget(tcp_box);
+			tcp_box->setTitle("TCP");
+			pVLayout_Dialog->addWidget(tcp_box);
+			pVLayout_tcpgb->addWidget(plw_tcpDetail);
+
+			QListWidgetItem *pSport = new QListWidgetItem(plw_tcpDetail);
+			QListWidgetItem *pDport = new QListWidgetItem(plw_tcpDetail);
+			QListWidgetItem *pSequence = new QListWidgetItem(plw_tcpDetail);
+			QListWidgetItem *pAcknumber = new QListWidgetItem(plw_tcpDetail);
+			QListWidgetItem *pHlen = new QListWidgetItem(plw_tcpDetail);
+			QListWidgetItem *pFlags = new QListWidgetItem(plw_tcpDetail);
+			QListWidgetItem *pWindow = new QListWidgetItem(plw_tcpDetail);
+			QListWidgetItem *pCrc = new QListWidgetItem(plw_tcpDetail);
+			QListWidgetItem *pUrgptr = new QListWidgetItem(plw_tcpDetail);
+			QListWidgetItem *pOp = new QListWidgetItem(plw_tcpDetail);
+
+			pSport->setText(str.sprintf("源端口号：%d", ntohs(th.sport)));
+			pDport->setText(str.sprintf("目的端口号：%d", ntohs(th.dport)));
+			pSequence->setText(str.sprintf("序号：%u", ntohl(th.sequence)));
+			pAcknumber->setText(str.sprintf("确认序号：%u", ntohl(th.acknumber)));
+			pHlen->setText(str.sprintf("头部长度：%x bytes", th.hlen * 4 / 10));
+			pFlags->setText(str.sprintf("标志位：0x%03x", th.flags));
+			pWindow->setText(str.sprintf("窗口大小：%d", ntohs(th.window)));
+			pCrc->setText(str.sprintf("校验和：0x%04x", ntohs(th.crc)));
+			pUrgptr->setText(str.sprintf("紧急指针：%x", th.urgptr));
+			pOp->setText(str.sprintf("选项：0x%x", th.op));
+
+			setLayout(pVLayout_tcpgb);
+
+			break;
+		}
+		case 17:
+		{
+			QVariant variant_uh = pktItem->data(Qt::UserRole + 5);
+			udp_header uh = variant_uh.value<udp_header>();
+
+			QGroupBox *udp_box = new QGroupBox();
+			QVBoxLayout *pVLayout_udpgb = new QVBoxLayout(udp_box);
+			QListWidget *plw_udpDetail = new QListWidget(udp_box);
+			udp_box->setTitle("UDP");
+			pVLayout_Dialog->addWidget(udp_box);
+			pVLayout_udpgb->addWidget(plw_udpDetail);
+
+			QListWidgetItem *pSport = new QListWidgetItem(plw_udpDetail);
+			QListWidgetItem *pDport = new QListWidgetItem(plw_udpDetail);
+			QListWidgetItem *plen = new QListWidgetItem(plw_udpDetail);
+			QListWidgetItem *pCrc = new QListWidgetItem(plw_udpDetail);
+
+			pSport->setText(str.sprintf("源端口号：%d", ntohs(uh.sport)));
+			pDport->setText(str.sprintf("目的端口号：%d", ntohs(uh.dport)));
+			plen->setText(str.sprintf("长度：%d", ntohs(uh.len)));
+			pCrc->setText(str.sprintf("校验和：0x%04x", ntohs(uh.crc)));
+
+			setLayout(pVLayout_udpgb);
+
+			break;
+		}
+		default:
+			break;
+		}
 
 		break;
 	}
@@ -611,11 +701,8 @@ void MainWindow::clickPacketDetail(QTableWidgetItem *pktItem) {
 		pVLayout_pktgb->addWidget(pPkt_data);
 	}
 
-
 	setLayout(pVLayout_Dialog);
 	setLayout(pVLayout_pktgb);
-
-
 
 	pDialog->show();
 
@@ -634,9 +721,14 @@ void MainWindow::receiveMsg(QString msg) {
 void MainWindow::receivePacket(const struct pcap_pkthdr* header, const u_char* pkt_data) {
 	struct tm ltime;
 	char timestr[16];
+
 	arp_header *arph;	//指向arp头部
 	ip_header *ih;		//指向ip头部
 	tcp_header *th;		//指向tcp头部
+	udp_header *uh;		//指向udp头部
+	icmp_header *icmph;		//指向icmp头部
+	igmp_header *igmph;		//指向igmp头部
+
 	Ethernet_pkt *fpkt;		//指向整个数据包
 	u_int ip_len;
 	u_short *pkt_type;
@@ -690,12 +782,11 @@ void MainWindow::receivePacket(const struct pcap_pkthdr* header, const u_char* p
 	ui.tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);  //设置选择行为时每次选择一行
 	ui.tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers); //设置不可编辑
 
-																		/*ARP协议为2054(0x0806的十进制)
-																		IP协议为2048(0x0800的十进制)*/
+	/*ARP协议为2054(0x0806的十进制)
+	IP协议为2048(0x0800的十进制)*/
 	switch (ntohs(*pkt_type)) {
 	case 2054:
 	{
-
 		//获得ARP数据包头部的位置
 		arph = (arp_header *)(pkt_data + 14);
 
@@ -763,9 +854,6 @@ void MainWindow::receivePacket(const struct pcap_pkthdr* header, const u_char* p
 				arph->dmac[5]);
 		}
 
-
-
-
 		//打印数据包的长度
 		str4 = str4.sprintf("len:%d\t", header->len);
 
@@ -817,43 +905,42 @@ void MainWindow::receivePacket(const struct pcap_pkthdr* header, const u_char* p
 		//获取IP数据包头部的位置
 		ih = (ip_header*)(pkt_data + 14);//14为以太网帧头部长度
 
-										 //获得TCP数据包头部的位置
+		//获得TCP数据包头部的位置
 		ip_len = (ih->ver_ihl & 0xf) * 4;
 		th = (tcp_header*)((u_char*)ih + ip_len);
+		uh = (udp_header*)((u_char*)ih + ip_len);
+		icmph = (icmp_header*)((u_char*)ih + ip_len);
+		igmph = (igmp_header*)((u_char*)ih + ip_len);
 
-		//将网络字节序列转换成主机字节序列
-		sport = ntohs(th->sport);
-		dport = ntohs(th->dport);
 
 		//打印IP地址和TCP端口
-		str2 = str2.sprintf("%d.%d.%d.%d:%d",
+		str2 = str2.sprintf("%d.%d.%d.%d",
 			ih->saddr.byte1,
 			ih->saddr.byte2,
 			ih->saddr.byte3,
-			ih->saddr.byte4,
-			sport
+			ih->saddr.byte4
 			);
 
-		fprintf(fp, "[pkt-sIP]%d.%d.%d.%d:%d   ",
+		fprintf(fp, "[pkt-sIP]%d.%d.%d.%d   ",
 			ih->saddr.byte1,
 			ih->saddr.byte2,
 			ih->saddr.byte3,
-			ih->saddr.byte4,
-			sport);
+			ih->saddr.byte4
+			);
 
-		str3 = str3.sprintf("%d.%d.%d.%d:%d",
+		str3 = str3.sprintf("%d.%d.%d.%d",
 			ih->daddr.byte1,
 			ih->daddr.byte2,
 			ih->daddr.byte3,
-			ih->daddr.byte4,
-			dport);
+			ih->daddr.byte4
+			);
 
-		fprintf(fp, "[pkt-dIP]%d.%d.%d.%d:%d   ",
+		fprintf(fp, "[pkt-dIP]%d.%d.%d.%d   ",
 			ih->daddr.byte1,
 			ih->daddr.byte2,
 			ih->daddr.byte3,
-			ih->daddr.byte4,
-			dport);
+			ih->daddr.byte4
+			);
 
 		//打印数据包的长度
 		str4 = str4.sprintf("len:%d", header->len);
@@ -863,6 +950,11 @@ void MainWindow::receivePacket(const struct pcap_pkthdr* header, const u_char* p
 		switch (ih->proto) {
 		case 1:
 			str5 = str5.sprintf("ICMP");
+			fprintf(fp, "[pkt-proto]ICMP\n");
+			break;
+		case 2:
+			str5 = str5.sprintf("IGMP");
+			fprintf(fp, "[pkt-proto]IGMP\n");
 			break;
 		case 6:
 			str5 = str5.sprintf("TCP");
@@ -870,11 +962,11 @@ void MainWindow::receivePacket(const struct pcap_pkthdr* header, const u_char* p
 			break;
 		case 17:
 			str5 = str5.sprintf("UDP");
+			fprintf(fp, "[pkt-proto]UDP\n");
 			break;
 		default:
 			str5 = str5.sprintf("ELSE");
 			break;
-
 		}
 
 		QTableWidgetItem *item1 = new QTableWidgetItem;
@@ -911,8 +1003,10 @@ void MainWindow::receivePacket(const struct pcap_pkthdr* header, const u_char* p
 			pitem->setData(Qt::UserRole + 2, header->len);//item绑定数据包长度
 			pitem->setData(Qt::UserRole + 3, QVariant::fromValue(*ih));//item绑定IP头
 			pitem->setData(Qt::UserRole + 4, QVariant::fromValue(*th));//item绑定TCP头
+			pitem->setData(Qt::UserRole + 5, QVariant::fromValue(*uh));//item绑定UDP头
+			pitem->setData(Qt::UserRole + 6, QVariant::fromValue(*icmph));//item绑定ICMP头
+			pitem->setData(Qt::UserRole + 7, QVariant::fromValue(*igmph));//item绑定IGMP头
 		}
-
 
 		break;
 	}
