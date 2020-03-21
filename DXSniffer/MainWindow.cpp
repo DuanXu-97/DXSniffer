@@ -2,6 +2,12 @@
 #include "MainWindow.h"
 #include "stdio.h"
 
+using namespace std;
+#include <iostream>
+#include <string>
+#include <regex>
+#include <bitset>
+
 #define F_PATH "C:\\log.txt"
 //#define F_PATH "C:\\NetPacketLog\\log.txt"
 
@@ -95,6 +101,13 @@ alt_u32 crc32_bit(alt_u8 *ptr, alt_u32 len, alt_u32 gx)
 	return (Reflect(crc, 32) ^ 0xffffffff);
 }
 
+
+u_char ReverseBit(u_char data)
+{
+	data = ((data << 2) & 0x0c) | ((data >> 2) & 0x03);
+	data = ((data << 1) & 0x0a) | ((data >> 1) & 0x05);
+	return data;
+}
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -462,12 +475,14 @@ void MainWindow::clickPacketDetail(QTableWidgetItem *pktItem) {
 	int pkt_len = pktItem->data(Qt::UserRole + 2).toInt();
 
 	for (int i = 0; i < pkt_len; i++) {
+		bitset<8> tempBitset(pkt_data.byte[i]);
+		bool flag = tempBitset.test(3);
 		pktStr.append(str.sprintf("%02x ", pkt_data.byte[i]));
 	}
 
 	Dialog *pDialog = new Dialog(this);
 	pDialog->setWindowTitle(QString("数据包详情"));
-	pDialog->setFixedSize(500, 500);
+	pDialog->setFixedSize(600, 800);
 	QGroupBox *pkt_box = new QGroupBox();
 
 	QVBoxLayout *pVLayout_Dialog = new QVBoxLayout(pDialog);
@@ -502,7 +517,6 @@ void MainWindow::clickPacketDetail(QTableWidgetItem *pktItem) {
 		QListWidgetItem *pSip = new QListWidgetItem(plw_arpDetail);
 		QListWidgetItem *pDmac = new QListWidgetItem(plw_arpDetail);
 		QListWidgetItem *pDip = new QListWidgetItem(plw_arpDetail);
-
 
 		pHwType->setText(str.sprintf("硬件类型：Ethernet (1)"));
 		pPtoType->setText(str.sprintf("协议类型：%s (0x%04x)", ntohs(arph.protyp) == 2048 ? "IPv4" : "else", ntohs(arph.protyp)));
@@ -607,6 +621,7 @@ void MainWindow::clickPacketDetail(QTableWidgetItem *pktItem) {
 		}
 		case 6:
 		{
+
 			QVariant variant_th = pktItem->data(Qt::UserRole + 4);
 			tcp_header th = variant_th.value<tcp_header>();
 
@@ -632,13 +647,85 @@ void MainWindow::clickPacketDetail(QTableWidgetItem *pktItem) {
 			pDport->setText(str.sprintf("目的端口号：%d", ntohs(th.dport)));
 			pSequence->setText(str.sprintf("序号：%u", ntohl(th.sequence)));
 			pAcknumber->setText(str.sprintf("确认序号：%u", ntohl(th.acknumber)));
-			pHlen->setText(str.sprintf("头部长度：%x bytes", th.hlen * 4 / 10));
+			pHlen->setText(str.sprintf("头部长度：%d bytes", th.hlen * 4));
 			pFlags->setText(str.sprintf("标志位：0x%03x", th.flags));
 			pWindow->setText(str.sprintf("窗口大小：%d", ntohs(th.window)));
 			pCrc->setText(str.sprintf("校验和：0x%04x", ntohs(th.crc)));
 			pUrgptr->setText(str.sprintf("紧急指针：%x", th.urgptr));
 			pOp->setText(str.sprintf("选项：0x%x", th.op));
 
+			int th_len = ((th.hlen) * 4);
+			int ip_len = (ih.ver_ihl & 0xf) * 4;
+			int data_len = pkt_len - 14 - ip_len - th_len;
+			QString pktStr;
+			QString temp;
+			for (int i = 14 + ip_len + th_len; i < data_len; i++) {
+				pktStr.append(temp.sprintf("%c", pkt_data.byte[i]));
+			}
+			std::cmatch cm;
+			// 判断是否为HTTP协议
+			if (std::regex_search(pktStr.toStdString().c_str(), cm, std::regex("^(GET|POST|PUT|DELETE|HEAD|TRACE|OPTIONS|CONNECT) .* HTTP/(1\.1|1\.0)")) ||
+				std::regex_search(pktStr.toStdString().c_str(), cm, std::regex("^HTTP/(1\.1|1\.0) [0-9]{3} "))) {
+				QString tempStr;
+				int flag = 0;
+				string _r = "0d";
+				string _n = "0a";
+				int i;
+				for (i = 14 + ip_len + th_len; i < data_len; i++) {
+					if (temp.sprintf("%02x", pkt_data.byte[i]).toStdString() == _r && temp.sprintf("%02x", pkt_data.byte[i+1]).toStdString() == _n) {
+						QListWidgetItem *pItem = new QListWidgetItem(plw_tcpDetail);
+						pItem->setText(tempStr);
+						tempStr.clear();
+						if (flag == 1) {
+							break;
+						}
+						else {
+							flag = 1;
+							i++;
+						}
+					}
+					else {
+						tempStr.append(temp.sprintf("%c", pkt_data.byte[i]));
+						flag = 0;
+					}
+				}
+
+				QString contentStr;
+				for (int j = i; j < data_len; j++) {
+					bitset<8> tempBitset(pkt_data.byte[j]);
+					bool flag = tempBitset.test(7);
+					if (!flag) {
+						contentStr.append(temp.sprintf("%c", pkt_data.byte[j]));
+					}
+					else {
+						contentStr.append(QString("."));
+					}
+				}
+
+				QGroupBox *http_box = new QGroupBox();
+				QVBoxLayout *pVLayout_httpgb = new QVBoxLayout(http_box);
+				http_box->setTitle("HTTP内容");
+				pVLayout_Dialog->addWidget(http_box);
+				if (contentStr.length() > 300) {
+					QLabel *pPkt_data = new QLabel(http_box);
+					pPkt_data->setText(contentStr);
+
+					QScrollArea *pkt_sa = new QScrollArea();
+					pkt_sa->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+					pkt_sa->setWidget(pPkt_data);
+					pPkt_data->setWordWrap(true);
+					pPkt_data->adjustSize();
+					pVLayout_httpgb->addWidget(pkt_sa);
+				}
+				else {
+					QLabel *pPkt_data = new QLabel(http_box);
+					pPkt_data->setText(contentStr);
+					pPkt_data->setWordWrap(true);
+					pPkt_data->adjustSize();
+					pVLayout_httpgb->addWidget(pPkt_data);
+				}
+				setLayout(pVLayout_httpgb);
+			}
 			setLayout(pVLayout_tcpgb);
 
 			break;
@@ -678,7 +765,6 @@ void MainWindow::clickPacketDetail(QTableWidgetItem *pktItem) {
 	default:
 		break;
 	}
-
 
 	pVLayout_Dialog->addWidget(pkt_box);
 
@@ -912,7 +998,6 @@ void MainWindow::receivePacket(const struct pcap_pkthdr* header, const u_char* p
 		icmph = (icmp_header*)((u_char*)ih + ip_len);
 		igmph = (igmp_header*)((u_char*)ih + ip_len);
 
-
 		//打印IP地址和TCP端口
 		str2 = str2.sprintf("%d.%d.%d.%d",
 			ih->saddr.byte1,
@@ -957,9 +1042,26 @@ void MainWindow::receivePacket(const struct pcap_pkthdr* header, const u_char* p
 			fprintf(fp, "[pkt-proto]IGMP\n");
 			break;
 		case 6:
-			str5 = str5.sprintf("TCP");
-			fprintf(fp, "[pkt-proto]TCP\n");
+		{
+			int th_len = ((th->hlen) * 4);
+			int data_len = (int)(header->len) - 14 - ip_len - th_len;
+			QString pktStr;
+			QString temp;
+			for (int i = 14 + ip_len + th_len; i < data_len; i++) {
+				pktStr.append(temp.sprintf("%c", fpkt->byte[i]));
+			}
+			std::cmatch cm;
+			if (std::regex_search(pktStr.toStdString().c_str(), cm, std::regex("^(GET|POST|PUT|DELETE|HEAD|TRACE|OPTIONS|CONNECT) .* HTTP/(1\.1|1\.0)")) ||
+				std::regex_search(pktStr.toStdString().c_str(), cm, std::regex("^HTTP/(1\.1|1\.0) [0-9]{3} "))) {
+				str5 = str5.sprintf("HTTP");
+				fprintf(fp, "[pkt-proto]HTTP\n");
+			}
+			else {
+				str5 = str5.sprintf("TCP");
+				fprintf(fp, "[pkt-proto]TCP\n");
+			}
 			break;
+		}
 		case 17:
 			str5 = str5.sprintf("UDP");
 			fprintf(fp, "[pkt-proto]UDP\n");

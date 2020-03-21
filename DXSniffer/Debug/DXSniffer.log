@@ -1,11 +1,15 @@
-﻿生成启动时间为 2020/3/20 23:55:13。
+﻿生成启动时间为 2020/3/21 23:12:57。
      1>项目“C:\Documents_DXSniffer\DXSniffer\DXSniffer\DXSniffer.vcxproj”在节点 2 上(Build 个目标)。
      1>项目“C:\Documents_DXSniffer\DXSniffer\DXSniffer\DXSniffer.vcxproj”(1)正在节点 2 上生成“C:\Documents_DXSniffer\DXSniffer\DXSniffer\DXSniffer.vcxproj”(1:2) (Build 个目标)。
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /IDebug\uic /IDebug\moc /IC:\Qt\Qt5.7.1\5.7\msvc2015\include /IC:\Qt\Qt5.7.1\5.7\msvc2015\include\QtWidgets /IC:\Qt\Qt5.7.1\5.7\msvc2015\include\QtGui /IC:\Qt\Qt5.7.1\5.7\msvc2015\include\QtANGLE /IC:\Qt\Qt5.7.1\5.7\msvc2015\include\QtCore /I"C:\Qt\Qt5.7.1\5.7\msvc2015\mkspecs\win32-msvc2015" /IDebug\moc /IDebug\uic /Zi /nologo /W1 /WX- /MP /Od /Oy- /D WPCAP /D HAVE_REMOTE /D UNICODE /D WIN32 /D QT_WIDGETS_LIB /D QT_GUI_LIB /D QT_CORE_LIB /D UNICODE /D WIN32 /D QT_WIDGETS_LIB /D QT_GUI_LIB /D QT_CORE_LIB /Gm- /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Thread.cpp
-         Thread.cpp
-     1>Thread.cpp(1): warning C4005: “HAVE_REMOTE”: 宏重定义
-         Thread.cpp(1): note: 命令行参数: 参见前面的“HAVE_REMOTE”定义
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /IDebug\uic /IDebug\moc /IC:\Qt\Qt5.7.1\5.7\msvc2015\include /IC:\Qt\Qt5.7.1\5.7\msvc2015\include\QtWidgets /IC:\Qt\Qt5.7.1\5.7\msvc2015\include\QtGui /IC:\Qt\Qt5.7.1\5.7\msvc2015\include\QtANGLE /IC:\Qt\Qt5.7.1\5.7\msvc2015\include\QtCore /I"C:\Qt\Qt5.7.1\5.7\msvc2015\mkspecs\win32-msvc2015" /IDebug\moc /IDebug\uic /Zi /nologo /W1 /WX- /MP /Od /Oy- /D WPCAP /D HAVE_REMOTE /D UNICODE /D WIN32 /D QT_WIDGETS_LIB /D QT_GUI_LIB /D QT_CORE_LIB /D UNICODE /D WIN32 /D QT_WIDGETS_LIB /D QT_GUI_LIB /D QT_CORE_LIB /Gm- /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt MainWindow.cpp
+         MainWindow.cpp
+     1>MainWindow.cpp(1): warning C4005: “HAVE_REMOTE”: 宏重定义
+         MainWindow.cpp(1): note: 命令行参数: 参见前面的“HAVE_REMOTE”定义
+     1>MainWindow.cpp(667): warning C4129: “.”: 不可识别的字符转义序列
+     1>MainWindow.cpp(668): warning C4129: “.”: 不可识别的字符转义序列
+     1>MainWindow.cpp(1054): warning C4129: “.”: 不可识别的字符转义序列
+     1>MainWindow.cpp(1055): warning C4129: “.”: 不可识别的字符转义序列
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Documents_DXSniffer\DXSniffer\Debug\\DXSniffer.exe" /NOLOGO /LIBPATH:C:\Qt\Qt5.7.1\5.7\msvc2015\lib /LIBPATH:C:\utils\my_sql\my_sql\lib /LIBPATH:C:\utils\postgresql\pgsql\lib wpcap.lib wsock32.lib ws2_32.lib packet.lib C:\Qt\Qt5.7.1\5.7\msvc2015\lib\qtmaind.lib shell32.lib C:\Qt\Qt5.7.1\5.7\msvc2015\lib\Qt5Widgetsd.lib C:\Qt\Qt5.7.1\5.7\msvc2015\lib\Qt5Guid.lib C:\Qt\Qt5.7.1\5.7\msvc2015\lib\Qt5Cored.lib C:\Qt\Qt5.7.1\5.7\msvc2015\lib\qtmaind.lib shell32.lib C:\Qt\Qt5.7.1\5.7\msvc2015\lib\Qt5Widgetsd.lib C:\Qt\Qt5.7.1\5.7\msvc2015\lib\Qt5Guid.lib C:\Qt\Qt5.7.1\5.7\msvc2015\lib\Qt5Cored.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Documents_DXSniffer\DXSniffer\Debug\DXSniffer.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Documents_DXSniffer\DXSniffer\Debug\DXSniffer.lib" /MACHINE:X86 /SAFESEH Debug\Dialog.obj
          Debug\main.obj
@@ -20,4 +24,4 @@
 
 已成功生成。
 
-已用时间 00:00:03.08
+已用时间 00:00:05.44

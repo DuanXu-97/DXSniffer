@@ -102,7 +102,7 @@ typedef struct tcp_header {
 	u_short dport;			//目的端口号
 	u_long sequence;		//序号
 	u_long acknumber;		//确认序号
-	u_char hlen;			//首部长度
+	u_char res:4, hlen:4;			//首部长度+保留
 	u_char flags;			//标志位
 							//u_short hl_rt_flags;	//首部长度4bit+保留6bit+标志位6bit
 	u_short window;			//窗口大小
